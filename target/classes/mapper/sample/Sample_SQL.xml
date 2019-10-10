@@ -15,7 +15,7 @@
            IDX,
            TITLE,
            HIT_CNT,
-           CREA_DTM
+           DATE_FORMAT(CREA_DTM, '%Y-%m-%d') AS CREA_DTM
        FROM
            TB_BOARD
        WHERE
