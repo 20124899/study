@@ -9,15 +9,10 @@ import first.common.dao.AbstractDAO;
 
 @Repository("sampleDAO")
 public class SampleDAO extends AbstractDAO {
-/*
+
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> selectBoardList(Map<String, Object> map) throws Exception {
-		return (Map<String, Object>) selectPagingList("sample.selectBoardList", map);
-	}
-*/
-	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> selectBoardList(Map<String, Object> map) throws Exception {
-		return (List<Map<String, Object>>) selectPagingList("sample.selectBoardList", map);
+	public Map<String,Object> selectBoardList(Map<String,Object> map) throws Exception{
+	    return (Map<String,Object>)selectPagingList("sample.selectBoardList",map);
 	}
 
 	public void insertBoard(Map<String, Object> map) throws Exception {
@@ -57,6 +52,5 @@ public class SampleDAO extends AbstractDAO {
 	public void updateFile(Map<String, Object> map) throws Exception {
 		update("sample.updateFile", map);
 	}
-
 
 }

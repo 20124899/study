@@ -30,38 +30,18 @@ public class SampleController {
 
 	@Resource(name = "sampleService")
 	private SampleService sampleService;
-/*
-	@RequestMapping(value = "/sample/openBoardList.do")
-	public ModelAndView openBoardList(CommandMap commandMap) throws Exception {
 
-		ModelAndView mv = new ModelAndView("sample/boardList");
-		Map<String, Object> map = sampleService.selectBoardList(commandMap.getMap());
-		mv.addObject("list", map.get("result"));
-		mv.addObject("paginationInfo", (PaginationInfo) map.get("paginationInfo"));
+	@RequestMapping(value="/sample/openBoardList.do")
+	public ModelAndView openBoardList(CommandMap commandMap) throws Exception{
+	     
+	    ModelAndView mv = new ModelAndView("sample/boardList");
+	    Map<String,Object> map = sampleService.selectBoardList(commandMap.getMap());
+	    mv.addObject("list", map.get("result"));
+	    mv.addObject("paginationInfo", (PaginationInfo)map.get("paginationInfo"));
+	     
+	    return mv;
+	}
 
-		return mv;
-	}
-*/
-
-	@RequestMapping(value = "/sample/openBoardList.do")
-	public ModelAndView openBoardList(CommandMap commandMap) throws Exception {
-		ModelAndView mv = new ModelAndView("/sample/boardList");
-		return mv;
-	}
-	
-	@RequestMapping(value = "/sample/selectBoardList.do")
-	public ModelAndView selectBoardList(CommandMap commandMap) throws Exception {
-		ModelAndView mv = new ModelAndView("jsonView");
-		List<Map<String, Object>> list = sampleService.selectBoardList(commandMap.getMap());
-		mv.addObject("list", list);
-		if (list.size() > 0) {
-			mv.addObject("TOTAL", list.get(0).get("TOTAL_COUNT"));
-		} else {
-			mv.addObject("TOTAL", 0);
-		}
-		return mv;
-	}
-	
 	@RequestMapping(value = "/sample/testMapArgumentResolver.do")
 	public ModelAndView testMapArgumentResolver(CommandMap commandMap) throws Exception {
 		ModelAndView mv = new ModelAndView("");

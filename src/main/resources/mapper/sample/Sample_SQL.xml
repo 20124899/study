@@ -15,7 +15,7 @@
            IDX,
            TITLE,
            HIT_CNT,
-           DATE_FORMAT(CREA_DTM, '%Y-%m-%d') AS CREA_DTM
+           CREA_DTM
        FROM
            TB_BOARD
        WHERE
@@ -35,7 +35,10 @@
 				HIT_CNT, 
 				DEL_GB, 
 				CREA_DTM, 
-				CREA_ID 
+				CREA_ID,
+				category,
+				lat,
+				lon
 				) 
 				VALUES 
 				(
@@ -44,7 +47,10 @@
 				0, 
 				'N',
 				now(),
-				'Admin'
+				'Admin',
+				#{category},
+				#{lat},
+				#{lon}
 			) 
 	]]>
 	</insert>
