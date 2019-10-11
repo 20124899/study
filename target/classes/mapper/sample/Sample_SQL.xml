@@ -15,7 +15,8 @@
            IDX,
            TITLE,
            HIT_CNT,
-           CREA_DTM
+           CREA_DTM,
+           category
        FROM
            TB_BOARD
        WHERE
@@ -74,7 +75,10 @@
 			CREA_ID,
 			CREA_DTM,
 			TITLE,
-			CONTENTS
+			CONTENTS,
+			category,
+			lat,
+			lon
 		FROM
 			TB_BOARD
 		WHERE
