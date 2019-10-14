@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -75,9 +76,15 @@ public class SampleController {
 	@RequestMapping(value = "/sample/openBoardDetail.do")
 	public ModelAndView openBoardDetail(CommandMap commandMap) throws Exception {
 		ModelAndView mv = new ModelAndView("/sample/boardDetail");
+	    // 상세 글 호출
 		Map<String, Object> map = sampleService.selectBoardDetail(commandMap.getMap());
-		mv.addObject("map", map.get("map"));
-		mv.addObject("list", map.get("list"));
+		mv.addObject("map", map.get("map")); // 현재 글의 위경도값
+		mv.addObject("list", map.get("list"));	
+		
+		Map<String,Object> map3 = (Map<String,Object>)map.get("map");
+		Map<String,Object> map2 = sampleService.selectBoardList2(map3);
+		mv.addObject("list2", map2.get("result"));
+		
 		return mv;
 	}
 

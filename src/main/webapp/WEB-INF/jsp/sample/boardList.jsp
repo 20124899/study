@@ -41,12 +41,61 @@ ul.tabs li.current{
 </head>
 <body>
 	  <ul class="tabs">
-	    <li id="one" class="tab-link current" data-tab="tab-1">관광지</li>
+	    <li id="zero" class="tab-link current" data-tab="tab-0">전체</li>	  
+	    <li id="one" class="tab-link" data-tab="tab-1">관광지</li>
 	    <li id="two" class="tab-link" data-tab="tab-2">음식점</li>
-	    <li id="three"class="tab-link" data-tab="tab-3">숙박</li>
+	    <li id="three "class="tab-link" data-tab="tab-3">숙박</li>
 	  </ul>
 	  
-	<div id="tab-1" class="tab-content current">  
+<div id="tab-0" class="tab-content current">  
+    <table class="board_list">
+        <colgroup>
+            <col width="5%">
+            <col width="50%">
+            <col width="5%">
+            <col width="15%">
+            <col width="15%">
+        </colgroup>
+        <caption><h2>게시판</h2></caption>    
+             
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>제목</th>
+                <th>Hit</th>
+                <th>작성자</th>
+                <th>작성시간</th>
+            </tr>
+        </thead>
+        <tbody>
+            <c:choose>
+                <c:when test="${fn:length(list)>0}">
+                    <c:forEach items="${list }" var="con" >
+      				    <tr>                  
+                            <td>${con.IDX }</td>
+                            <td><input type="hidden" id="IDX" value="${con.IDX }"><a href="#this" name="TITLE">${con.TITLE }</a></td>
+                            <td>${con.HIT_CNT }</td>
+                            <td>${con.CREA_ID }</td>
+                            <td>${con.CREA_DTM }</td>
+                        </tr>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <tr>
+                        <td>게시물이 존재하지 않습니다.</td>
+                    </tr>
+                </c:otherwise>            
+            </c:choose>
+        </tbody>
+    </table>  	 
+    
+    <c:if test="${not empty paginationInfo}">
+         <ui:pagination paginationInfo = "${paginationInfo}" type="text" jsFunction="fn_search"/>
+    </c:if>
+    <input type="hidden" id="currentPageNo" name="currentPageNo"/>
+     
+   	</div><br/>
+	<div id="tab-1" class="tab-content">  
     <table class="board_list">
         <colgroup>
             <col width="5%">
@@ -179,20 +228,16 @@ ul.tabs li.current{
                 </c:otherwise>            
             </c:choose>
         </tbody>
-    </table>  	 
+    </table> 
    	</div> <br/>
  
-    <c:if test="${not empty paginationInfo}">
-         <ui:pagination paginationInfo = "${paginationInfo}" type="text" jsFunction="fn_search"/>
-    </c:if>
-    <input type="hidden" id="currentPageNo" name="currentPageNo"/>
-     
     <a href="#this" class="btn" id="write">글쓰기</a>
      
     <%@ include file="/WEB-INF/include/include-body.jspf" %>
      
     <script type="text/javascript">
 
+    
 	$(document).ready(function(){
 	   
 	  $('ul.tabs li').click(function(){

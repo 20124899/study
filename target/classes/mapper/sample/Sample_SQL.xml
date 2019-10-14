@@ -15,7 +15,7 @@
            IDX,
            TITLE,
            HIT_CNT,
-           CREA_DTM,
+           DATE_FORMAT(CREA_DTM, '%Y-%m-%d') AS CREA_DTM,
            category
        FROM
            TB_BOARD
@@ -73,7 +73,7 @@
 			IDX,
 			HIT_CNT,
 			CREA_ID,
-			CREA_DTM,
+			DATE_FORMAT(CREA_DTM, '%Y-%m-%d') AS CREA_DTM,
 			TITLE,
 			CONTENTS,
 			category,
@@ -162,6 +162,37 @@
 				IDX = #{FILE_IDX} 
 		]]> 
 	</update>
+	
+	<select id="selectBoardList2" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+       SELECT
+           (
+               SELECT
+                   COUNT(*) 
+               FROM 
+                   TB_BOARD
+               WHERE 
+                   DEL_GB = 'N'
+           ) AS TOTAL_COUNT ,
+           IDX,
+           TITLE,
+           HIT_CNT,
+           DATE_FORMAT(CREA_DTM, '%Y-%m-%d') AS CREA_DTM,
+           category,
+           lat,
+           lon,
+           ( 6371 * acos( cos( radians( lat ) ) * cos( radians( #{lat} ) ) * cos( radians( #{lon} ) - radians( lon ) ) 
+			+ sin( radians( lat ) ) * sin( radians( #{lat} ) ) ) ) AS distance
+       FROM
+           TB_BOARD
+       WHERE
+           DEL_GB= 'N'
+       HAVING distance < 5 
+       ORDER BY 
+           IDX DESC
+       LIMIT #{START} , #{END} 
+   ]]>
+	</select>
 
 </mapper>
 
