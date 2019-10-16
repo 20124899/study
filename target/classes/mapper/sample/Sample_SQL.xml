@@ -2,7 +2,6 @@
 <mapper namespace="sample">
 
 	<select id="selectBoardList" parameterType="hashmap" resultType="hashmap">
-	<![CDATA[
        SELECT
            (
                SELECT
@@ -11,20 +10,27 @@
                    TB_BOARD
                WHERE 
                    DEL_GB = 'N'
+                   <if test="category != null and category != ''">
+			       AND category = #{category}
+			       </if>
            ) AS TOTAL_COUNT ,
            IDX,
            TITLE,
            HIT_CNT,
            DATE_FORMAT(CREA_DTM, '%Y-%m-%d') AS CREA_DTM,
-           category
+           category,
+           address
        FROM
            TB_BOARD
        WHERE
            DEL_GB= 'N'
+       <if test="category != null and category != ''">
+       AND category = #{category}
+       </if>
        ORDER BY 
            IDX DESC
        LIMIT #{START} , #{END} 
-   ]]>
+
 	</select>
 
 	<insert id="insertBoard" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX"> 
@@ -39,7 +45,8 @@
 				CREA_ID,
 				category,
 				lat,
-				lon
+				lon,
+				address
 				) 
 				VALUES 
 				(
@@ -51,7 +58,8 @@
 				'Admin',
 				#{category},
 				#{lat},
-				#{lon}
+				#{lon},
+				#{address}
 			) 
 	]]>
 	</insert>
@@ -78,11 +86,12 @@
 			CONTENTS,
 			category,
 			lat,
-			lon
+			lon,
+			address
 		FROM
 			TB_BOARD
 		WHERE
-			IDX = #{IDX}		
+			IDX = #{IDX}	
 	]]>
 	</select>
 
@@ -91,7 +100,11 @@
 		UPDATE TB_BOARD 
 		SET 
 			TITLE = #{TITLE}, 
-			CONTENTS = #{CONTENTS} 
+			CONTENTS = #{CONTENTS},
+			category = #{category},
+			lat = #{lat},
+			lon = #{lon},
+			address = #{address}
 		WHERE 
 			IDX = #{IDX} 
 	]]>
@@ -187,6 +200,7 @@
            TB_BOARD
        WHERE
            DEL_GB= 'N'
+     	and category = #{category}	
        HAVING distance < 5 
        ORDER BY 
            IDX DESC

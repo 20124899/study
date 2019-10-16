@@ -1,22 +1,23 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>      
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>게시물 리스트</title>
-    <%@ include file="/WEB-INF/include/include-header.jspf" %>
-<style type="text/css">    
-.container{
+<title>게시물 리스트</title>
+<%@ include file="/WEB-INF/include/include-header.jspf"%>
+<style type="text/css">
+.container {
 	width: 500px;
 	margin: 0 auto;
 }
 
-ul.tabs{
+ul.tabs {
 	margin: 0px;
 	padding: 0px;
 	list-style: none;
 }
 
-ul.tabs li{
+ul.tabs li {
 	background: none;
 	color: #222;
 	display: inline-block;
@@ -24,261 +25,280 @@ ul.tabs li{
 	cursor: pointer;
 }
 
-ul.tabs li.current{
+ul.tabs li.current {
 	background: #ededed;
 	color: #222;
 }
 
-.tab-content{
+.tab-content {
 	display: none;
 	padding: 15px;
 }
 
-.tab-content.current{
+.tab-content.current {
 	display: inherit;
 }
 </style>
 </head>
 <body>
-	  <ul class="tabs">
-	    <li id="zero" class="tab-link current" data-tab="tab-0">전체</li>	  
-	    <li id="one" class="tab-link" data-tab="tab-1">관광지</li>
-	    <li id="two" class="tab-link" data-tab="tab-2">음식점</li>
-	    <li id="three "class="tab-link" data-tab="tab-3">숙박</li>
-	  </ul>
-	  
-<div id="tab-0" class="tab-content current">  
-    <table class="board_list">
-        <colgroup>
-            <col width="5%">
-            <col width="50%">
-            <col width="5%">
-            <col width="15%">
-            <col width="15%">
-        </colgroup>
-        <caption><h2>게시판</h2></caption>    
-             
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>제목</th>
-                <th>Hit</th>
-                <th>작성자</th>
-                <th>작성시간</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:choose>
-                <c:when test="${fn:length(list)>0}">
-                    <c:forEach items="${list }" var="con" >
-      				    <tr>                  
-                            <td>${con.IDX }</td>
-                            <td><input type="hidden" id="IDX" value="${con.IDX }"><a href="#this" name="TITLE">${con.TITLE }</a></td>
-                            <td>${con.HIT_CNT }</td>
-                            <td>${con.CREA_ID }</td>
-                            <td>${con.CREA_DTM }</td>
-                        </tr>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <tr>
-                        <td>게시물이 존재하지 않습니다.</td>
-                    </tr>
-                </c:otherwise>            
-            </c:choose>
-        </tbody>
-    </table>  	 
-    
-    <c:if test="${not empty paginationInfo}">
-         <ui:pagination paginationInfo = "${paginationInfo}" type="text" jsFunction="fn_search"/>
-    </c:if>
-    <input type="hidden" id="currentPageNo" name="currentPageNo"/>
-     
-   	</div><br/>
-	<div id="tab-1" class="tab-content">  
-    <table class="board_list">
-        <colgroup>
-            <col width="5%">
-            <col width="50%">
-            <col width="5%">
-            <col width="15%">
-            <col width="15%">
-        </colgroup>
-        <caption><h2>게시판</h2></caption>    
-             
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>제목</th>
-                <th>Hit</th>
-                <th>작성자</th>
-                <th>작성시간</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:choose>
-                <c:when test="${fn:length(list)>0}">
-                    <c:forEach items="${list }" var="con" >
-      				    <tr>              
-      				   <c:if test="${con.category eq '관광지'}">      
-                            <td>${con.IDX }</td>
-                            <td><input type="hidden" id="IDX" value="${con.IDX }"><a href="#this" name="TITLE">${con.TITLE }</a></td>
-                            <td>${con.HIT_CNT }</td>
-                            <td>${con.CREA_ID }</td>
-                            <td>${con.CREA_DTM }</td>
-                          </c:if>
-                        </tr>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <tr>
-                        <td>게시물이 존재하지 않습니다.</td>
-                    </tr>
-                </c:otherwise>            
-            </c:choose>
-        </tbody>
-    </table>  	 
-   	</div><br/>
-   	
-   	<div id="tab-2" class="tab-content">  
-    <table class="board_list">
-        <colgroup>
-            <col width="5%">
-            <col width="50%">
-            <col width="5%">
-            <col width="15%">
-            <col width="15%">
-        </colgroup>
-        <caption><h2>게시판</h2></caption>    
-             
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>제목</th>
-                <th>Hit</th>
-                <th>작성자</th>
-                <th>작성시간</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:choose>
-                <c:when test="${fn:length(list)>0}">
-                    <c:forEach items="${list }" var="con" >
-      				    <tr>
-      				     <c:if test="${con.category eq '음식점'}"> 
-                            <td>${con.IDX }</td>
-                            <td><input type="hidden" id="IDX" value="${con.IDX }"><a href="#this" name="TITLE">${con.TITLE }</a></td>
-                            <td>${con.HIT_CNT }</td>
-                            <td>${con.CREA_ID }</td>
-                            <td>${con.CREA_DTM }</td>
-                          </c:if>
-                        </tr>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <tr>
-                        <td>게시물이 존재하지 않습니다.</td>
-                    </tr>
-                </c:otherwise>            
-            </c:choose>
-        </tbody>
-    </table>   	 
-   	</div><br/>
- 
- 
- <div id="tab-3" class="tab-content">  
-    <table class="board_list">
-        <colgroup>
-            <col width="5%">
-            <col width="50%">
-            <col width="5%">
-            <col width="15%">
-            <col width="15%">
-        </colgroup>
-        <caption><h2>게시판</h2></caption>    
-             
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>제목</th>
-                <th>Hit</th>
-                <th>작성자</th>
-                <th>작성시간</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:choose>
-                <c:when test="${fn:length(list)>0}">
-                    <c:forEach items="${list }" var="con" >
-      				    <tr>
-      				     <c:if test="${con.category eq '숙박'}"> 
-                            <td>${con.IDX }</td>
-                            <td><input type="hidden" id="IDX" value="${con.IDX }"><a href="#this" name="TITLE">${con.TITLE }</a></td>
-                            <td>${con.HIT_CNT }</td>
-                            <td>${con.CREA_ID }</td>
-                            <td>${con.CREA_DTM }</td>
-                          </c:if>
-                        </tr>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <tr>
-                        <td>게시물이 존재하지 않습니다.</td>
-                    </tr>
-                </c:otherwise>            
-            </c:choose>
-        </tbody>
-    </table> 
-   	</div> <br/>
- 
-    <a href="#this" class="btn" id="write">글쓰기</a>
-     
-    <%@ include file="/WEB-INF/include/include-body.jspf" %>
-     
-    <script type="text/javascript">
+	<ul class="tabs">
+		<li id="zero" class="tab-link  <c:if test="${category eq 'tab-0' }"> current</c:if>" data-tab="tab-0">전체</li>
+		<li id="one" class="tab-link <c:if test="${category eq 'tab-1' }"> current</c:if>"" data-tab="tab-1">관광지</li>
+		<li id="two" class="tab-link <c:if test="${category eq 'tab-2' }"> current</c:if>""  data-tab="tab-2">음식점</li>
+		<li id="three " class="tab-link <c:if test="${category eq 'tab-3' }"> current</c:if>"" data-tab="tab-3">숙박</li>
+	</ul>
 
-    
-	$(document).ready(function(){
-	   
-	  $('ul.tabs li').click(function(){
-	    var tab_id = $(this).attr('data-tab');
-	 
-	    $('ul.tabs li').removeClass('current');
-	    $('.tab-content').removeClass('current');
-	 
-	    $(this).addClass('current');
-	    $("#"+tab_id).addClass('current');
-	  });	 
-	});    
-        $(document).ready(function(){
-            $("#write").on("click",function(e){
-                e.preventDefault();
-                fn_openBoardWrite();
-            })
-            $("a[name='TITLE']").on("click",function(e){
-                e.preventDefault();
-                fn_openBoardDetail($(this));
-            })
-        })
-          
-        function fn_openBoardWrite(){
-            var comSubmit = new ComSubmit();
-            comSubmit.setUrl("<c:url value='/sample/openBoardWrite.do'/>");
-            comSubmit.submit();
-        }
-        function fn_openBoardDetail(val){
-            var comSubmit = new ComSubmit();
-            comSubmit.addParam("IDX",val.parent().find("#IDX").val());
-            comSubmit.setUrl("<c:url value='/sample/openBoardDetail.do'/>");
-            comSubmit.submit();
-        }
-        function fn_search(pageNo){
-            var comSubmit = new ComSubmit();
-            comSubmit.setUrl("<c:url value='/sample/openBoardList.do' />");
-            comSubmit.addParam("currentPageNo", pageNo);
-            comSubmit.submit();
-        }
- 
-    </script>
+	<div id="tab-0" class="tab-content  <c:if test="${category eq 'tab-0' or empty category }"> current</c:if>">
+		<table class="board_list">
+			<colgroup>
+				<col width="5%">
+				<col width="50%">
+				<col width="5%">
+				<col width="15%">
+				<col width="15%">
+			</colgroup>
+			<caption>
+				<h2>게시판</h2>
+			</caption>
+
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>제목</th>
+					<th>Hit</th>
+					<th>작성자</th>
+					<th>작성시간</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:choose>
+					<c:when test="${fn:length(list)>0}">
+						<c:forEach items="${list }" var="con">
+							<tr>
+								<td>${con.IDX }</td>
+								<td><input type="hidden" id="IDX" value="${con.IDX }"><a
+									href="#this" name="TITLE">${con.TITLE }</a></td>
+								<td>${con.HIT_CNT }</td>
+								<td>${con.CREA_ID }</td>
+								<td>${con.CREA_DTM }</td>
+							</tr>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td>게시물이 존재하지 않습니다.</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
+			</tbody>
+		</table>
+	</div>
+	<br />
+	<div id="tab-1" class="tab-content  <c:if test="${category eq 'tab-1' }"> current</c:if>">
+		<table class="board_list">
+			<colgroup>
+				<col width="5%">
+				<col width="50%">
+				<col width="5%">
+				<col width="15%">
+				<col width="15%">
+			</colgroup>
+			<caption>
+				<h2>게시판</h2>
+			</caption>
+
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>제목</th>
+					<th>Hit</th>
+					<th>작성자</th>
+					<th>작성시간</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:choose>
+					<c:when test="${fn:length(list)>0}">
+						<c:forEach items="${list }" var="con">
+							<c:if test="${con.category eq '관광지'}">
+								<tr>
+									<td>${con.IDX }</td>
+									<td><input type="hidden" id="IDX" value="${con.IDX }"><a
+										href="#this" name="TITLE">${con.TITLE }</a></td>
+									<td>${con.HIT_CNT }</td>
+									<td>${con.CREA_ID }</td>
+									<td>${con.CREA_DTM }</td>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td>게시물이 존재하지 않습니다.</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
+			</tbody>
+		</table>
+	</div>
+	<br />
+
+	<div id="tab-2" class="tab-content <c:if test="${category eq 'tab-2' }"> current</c:if>">
+		<table class="board_list">
+			<colgroup>
+				<col width="5%">
+				<col width="50%">
+				<col width="5%">
+				<col width="15%">
+				<col width="15%">
+			</colgroup>
+			<caption>
+				<h2>게시판</h2>
+			</caption>
+
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>제목</th>
+					<th>Hit</th>
+					<th>작성자</th>
+					<th>작성시간</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:choose>
+					<c:when test="${fn:length(list)>0}">
+						<c:forEach items="${list }" var="con">
+							<c:if test="${con.category eq '음식점'}">
+								<tr>
+									<td>${con.IDX }</td>
+									<td><input type="hidden" id="IDX" value="${con.IDX }"><a
+										href="#this" name="TITLE">${con.TITLE }</a></td>
+									<td>${con.HIT_CNT }</td>
+									<td>${con.CREA_ID }</td>
+									<td>${con.CREA_DTM }</td>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td>게시물이 존재하지 않습니다.</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
+			</tbody>
+		</table>
+	</div>
+	<br />
+
+
+	<div id="tab-3" class="tab-content <c:if test="${category eq 'tab-3' }"> current</c:if>">
+		<table class="board_list">
+			<colgroup>
+				<col width="5%">
+				<col width="50%">
+				<col width="5%">
+				<col width="15%">
+				<col width="15%">
+			</colgroup>
+			<caption>
+				<h2>게시판</h2>
+			</caption>
+
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>제목</th>
+					<th>Hit</th>
+					<th>작성자</th>
+					<th>작성시간</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:choose>
+					<c:when test="${fn:length(list)>0}">
+						<c:forEach items="${list }" var="con">
+							<c:if test="${con.category eq '숙박'}">
+								<tr>
+									<td>${con.IDX }</td>
+									<td><input type="hidden" id="IDX" value="${con.IDX }"><a
+										href="#this" name="TITLE">${con.TITLE }</a></td>
+									<td>${con.HIT_CNT }</td>
+									<td>${con.CREA_ID }</td>
+									<td>${con.CREA_DTM }</td>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td>게시물이 존재하지 않습니다.</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
+			</tbody>
+		</table>
+	</div>
+	<br />
+	
+		
+	<c:if test="${not empty paginationInfo}">
+			<ui:pagination paginationInfo="${paginationInfo}" type="text"
+				jsFunction="fn_search" />
+		</c:if>
+		<input type="hidden" id="currentPageNo" name="currentPageNo" />
+	<a href="#this" class="btn" id="write">글쓰기</a>
+
+	<%@ include file="/WEB-INF/include/include-body.jspf"%>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			$('ul.tabs li').click(function() {
+				var tab_id = $(this).attr('data-tab');
+				
+				$("#category_id").val(tab_id);
+				fn_search(1);
+				$('ul.tabs li').removeClass('current');
+				$('.tab-content').removeClass('current');
+
+				$(this).addClass('current');
+				$("#" + tab_id).addClass('current');
+			});
+		});
+		
+
+		$(document).ready(function() {
+			$("#write").on("click", function(e) {
+				e.preventDefault();
+				fn_openBoardWrite();
+			})
+			$("a[name='TITLE']").on("click", function(e) {
+				e.preventDefault();
+				fn_openBoardDetail($(this));
+			})
+		})
+
+		function fn_openBoardWrite() {
+			var comSubmit = new ComSubmit();
+			comSubmit.setUrl("<c:url value='/sample/openBoardWrite.do'/>");
+			comSubmit.submit();
+		}
+		function fn_openBoardDetail(val) {
+			var comSubmit = new ComSubmit();
+			comSubmit.addParam("IDX", val.parent().find("#IDX").val());
+			comSubmit.setUrl("<c:url value='/sample/openBoardDetail.do'/>");
+			comSubmit.submit();
+		}
+		function fn_search(pageNo) {
+			var comSubmit = new ComSubmit();
+			var url = "/first/sample/openBoardList.do";
+			
+			comSubmit.setUrl("<c:url value='"+url+"' />");
+			comSubmit.addParam("currentPageNo", pageNo);
+			comSubmit.submit();
+		}
+	</script>
 </body>
 </html>
