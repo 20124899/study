@@ -200,7 +200,8 @@
            TB_BOARD
        WHERE
            DEL_GB= 'N'
-     	and category = #{category}	
+     	and category = #{category}
+     	and (lat != #{lat} and lon != #{lon} )
        HAVING distance < 5 
        ORDER BY 
            IDX DESC
