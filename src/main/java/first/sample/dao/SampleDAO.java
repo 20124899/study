@@ -18,6 +18,10 @@ public class SampleDAO extends AbstractDAO {
 	public void insertBoard(Map<String, Object> map) throws Exception {
 		insert("sample.insertBoard", map);
 	}
+	
+	public void insertBoardTour(Map<String, Object> map) throws Exception {
+		insert("sample.insertBoardTour", map);
+	}
 
 	public void updateHitCnt(Map<String, Object> map) throws Exception {
 		update("sample.updateHitCnt", map);
@@ -26,6 +30,11 @@ public class SampleDAO extends AbstractDAO {
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> selectBoardDetail(Map<String, Object> map) throws Exception {
 		return (Map<String, Object>) selectOne("sample.selectBoardDetail", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> selectBoardDetailTour(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) selectOne("sample.selectBoardDetailTour", map);
 	}
 
 	public void updateBoard(Map<String, Object> map) throws Exception {
@@ -56,6 +65,10 @@ public class SampleDAO extends AbstractDAO {
 	@SuppressWarnings("unchecked")
 	public Map<String,Object> selectBoardList2(Map<String,Object> map) throws Exception{
 	    return (Map<String,Object>)selectPagingList("sample.selectBoardList2",map);
+	}
+	
+	public void updateBoardTour(Map<String, Object> map) throws Exception {
+		update("sample.updateBoardTour", map);
 	}
 
 }

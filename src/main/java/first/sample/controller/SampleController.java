@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -86,10 +87,45 @@ public class SampleController {
 		ModelAndView mv = new ModelAndView("/sample/boardWrite");
 		return mv;
 	}
+	
+	// 입력 페이지로
+		@RequestMapping(value = "/sample/openWeather.do")
+		public ModelAndView openWeather(CommandMap commandMap) throws Exception {
+			ModelAndView mv = new ModelAndView("/sample/weather");
+			return mv;
+		}
 
+
+	/*
 	// DB 글쓰기 기능
 	@RequestMapping(value = "/sample/insertBoard.do")
 	public ModelAndView insertBoard(CommandMap commandMap, HttpServletRequest request) throws Exception {
+		ModelAndView mv = new ModelAndView("redirect:/sample/openBoardList.do");
+		sampleService.insertBoard(commandMap.getMap(), request);
+		return mv;
+	}
+	*/
+	
+	// DB 글쓰기 기능(관광지)
+	@RequestMapping(value = "/sample/insertBoardtour.do")
+	public ModelAndView insertBoardTour(CommandMap commandMap, HttpServletRequest request) throws Exception {
+		ModelAndView mv = new ModelAndView("redirect:/sample/openBoardList.do");
+		sampleService.insertBoard(commandMap.getMap(), request);
+		sampleService.insertBoardTour(commandMap.getMap());
+		return mv;
+	}
+	
+	// DB 글쓰기 기능(음식점)
+	@RequestMapping(value = "/sample/insertBoardfood.do")
+	public ModelAndView insertBoardFood(CommandMap commandMap, HttpServletRequest request) throws Exception {
+		ModelAndView mv = new ModelAndView("redirect:/sample/openBoardList.do");
+		sampleService.insertBoard(commandMap.getMap(), request);
+		return mv;
+	}
+	
+	// DB 글쓰기 기능(숙박)
+	@RequestMapping(value = "/sample/insertBoardadj.do")
+	public ModelAndView insertBoardAdj(CommandMap commandMap, HttpServletRequest request) throws Exception {
 		ModelAndView mv = new ModelAndView("redirect:/sample/openBoardList.do");
 		sampleService.insertBoard(commandMap.getMap(), request);
 		return mv;
@@ -106,6 +142,44 @@ public class SampleController {
 		
 		return mv;
 	}
+	
+	// 상세화면 보기(관광지)
+	@RequestMapping(value = "/sample/openBoardDetailtour.do")
+	public ModelAndView openBoardDetailTour(CommandMap commandMap) throws Exception {
+		ModelAndView mv = new ModelAndView("/sample/boardDetail");				
+	    // 상세 글 호출
+		Map<String, Object> map = sampleService.selectBoardDetailTour(commandMap.getMap());
+		mv.addObject("map", map.get("map")); // 현재 글의 위경도값을 담고 있는 map
+		mv.addObject("list", map.get("list"));	// 현재 글 대상 정보
+		
+		return mv;
+	}
+	
+/*	
+	// 상세화면 보기(음식점)
+	@RequestMapping(value = "/sample/openBoardDetailfood.do")
+	public ModelAndView openBoardDetailFood(CommandMap commandMap) throws Exception {
+		ModelAndView mv = new ModelAndView("/sample/boardDetail");				
+	    // 상세 글 호출
+		Map<String, Object> map = sampleService.selectBoardDetailFood(commandMap.getMap());
+		mv.addObject("map", map.get("map")); // 현재 글의 위경도값을 담고 있는 map
+		mv.addObject("list", map.get("list"));	// 현재 글 대상 정보
+			
+		return mv;
+	}
+		
+	// 상세화면 보기(숙박)
+	@RequestMapping(value = "/sample/openBoardDetailadj.do")
+	public ModelAndView openBoardDetailAdj(CommandMap commandMap) throws Exception {
+		ModelAndView mv = new ModelAndView("/sample/boardDetail");				
+	    // 상세 글 호출
+		Map<String, Object> map = sampleService.selectBoardDetailAdj(commandMap.getMap());
+		mv.addObject("map", map.get("map")); // 현재 글의 위경도값을 담고 있는 map
+		mv.addObject("list", map.get("list"));	// 현재 글 대상 정보
+			
+		return mv;
+	}
+*/	
 	
 	// 상세 페이지 맵
 	@RequestMapping(value = "/sample/openBoardDetailMap.do")
@@ -129,14 +203,45 @@ public class SampleController {
 	public ModelAndView openBoardUpdate(CommandMap commandMap) throws Exception {
 		ModelAndView mv = new ModelAndView("/sample/boardUpdate");
 		Map<String, Object> map = sampleService.selectBoardDetail(commandMap.getMap());
+		Map<String, Object> map2 = sampleService.selectBoardDetailTour(commandMap.getMap());
 		mv.addObject("map", map.get("map"));
 		mv.addObject("list", map.get("list"));
+		mv.addObject("tour", map2.get("map"));
 		return mv;
 	}
-
+/*
 	// DB 수정 기능
 	@RequestMapping(value = "/sample/updateBoard.do")
 	public ModelAndView updateBoard(CommandMap commandMap, HttpServletRequest request) throws Exception {
+		ModelAndView mv = new ModelAndView("redirect:/sample/openBoardDetail.do");
+		sampleService.updateBoard(commandMap.getMap(), request);
+		mv.addObject("IDX", commandMap.get("IDX"));
+		return mv;
+	}
+	
+*/	
+	// DB 수정 기능(관광지)
+	@RequestMapping(value = "/sample/updateBoardtour.do")
+	public ModelAndView updateBoardTour(CommandMap commandMap, HttpServletRequest request) throws Exception {
+		ModelAndView mv = new ModelAndView("redirect:/sample/openBoardDetail.do");
+		sampleService.updateBoard(commandMap.getMap(), request);
+		sampleService.updateBoardTour(commandMap.getMap());
+		mv.addObject("IDX", commandMap.get("IDX"));
+		return mv;
+	}
+	
+	// DB 수정 기능(음식)
+	@RequestMapping(value = "/sample/updateBoardfood.do")
+	public ModelAndView updateBoardFood(CommandMap commandMap, HttpServletRequest request) throws Exception {
+		ModelAndView mv = new ModelAndView("redirect:/sample/openBoardDetail.do");
+		sampleService.updateBoard(commandMap.getMap(), request);
+		mv.addObject("IDX", commandMap.get("IDX"));
+		return mv;
+	}
+		
+	// DB 수정 기능(숙박)
+	@RequestMapping(value = "/sample/updateBoardadj.do")
+	public ModelAndView updateBoardAdj(CommandMap commandMap, HttpServletRequest request) throws Exception {
 		ModelAndView mv = new ModelAndView("redirect:/sample/openBoardDetail.do");
 		sampleService.updateBoard(commandMap.getMap(), request);
 		mv.addObject("IDX", commandMap.get("IDX"));

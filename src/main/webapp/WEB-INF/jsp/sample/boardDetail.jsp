@@ -68,16 +68,27 @@ ul.tabs li.current{
 			<tr>
 				<td colspan="4">${map.CONTENTS }</td>
 			</tr>
+			<c:if test="${map.category eq '관광지'}">
+			<tr>
+				<th scope="row">주차장</th>
+				<td>${map.parking }</td>
+			
+				<th scope="row">이용료</th>
+				<td>${map.fee }</td>
+			</tr>
+			<tr>
+				<th scope="row">이용시간</th>
+				<td>${map.use_time }</td>		
+				<th scope="row">휴무일</th>
+				<td>${map.closed_day }</td>
+			</tr>
+			</c:if>
 			<tr>
 				<th scope="row">첨부파일</th>
 				<td colspan="3"><c:forEach var="row" items="${list }">
 						<input type="hidden" id="IDX" value="${row.IDX }">
 						<a href="#this" name="file">${row.ORIGINAL_FILE_NAME }</a> (${row.FILE_SIZE }kb) 
 				</c:forEach></td>
-			</tr>
-			<tr>
-				<th>카테고리</th>
-				<td colspan="3">${map.category }</td>
 			</tr>
 		</tbody>
 	</table>

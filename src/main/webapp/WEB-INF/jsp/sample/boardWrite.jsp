@@ -4,6 +4,16 @@
 <html lang="ko">
 <head>
 <%@ include file="/WEB-INF/include/include-header.jspf"%>
+<style type="text/css">
+.tab-content {
+	display: none;
+	padding: 15px;
+}
+
+.tab-content.current {
+	display: inherit;
+}
+</style>
 </head>
 <body>
 	<form id="frm" name="frm" enctype="multipart/form-data">
@@ -29,14 +39,46 @@
 				<tr>
 					<td colspan="2" class="view_text"><textarea rows="20"
 							cols="100" title="내용" id="CONTENTS" name="CONTENTS"></textarea></td>
-				</tr>				
+				</tr>								
 				<th>주소</th><td><input type="text" id="sample5_address" class="wdp_90" name="address" onclick="onclick_addr();" readonly ></td>
 				<td><input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"></td><br>
-			</tbody>
+			</tbody>			
 			<input type="hidden" id="lat" name="lat">
 			<input type="hidden" id="lon" name="lon">
 		</table>
-		<div id="map" style="width:500px;height:300px;margin-top:10px;display:none"></div>
+			<div id="tab-0" class="tab-content current"></div>
+			<div id="tab-1" class="tab-content" disabled="disabled" style="padding: 0px;">
+			<table class="board_view">
+			<colgroup>
+				<col width="16.4%">
+				<col width="*" />
+			</colgroup>
+				<tr>
+				<th>주차장</th>
+				<td><label><input type="radio" name="parking" value="있음">있음</label>
+					<label><input type="radio" name="parking" checked="checked" value="없음">없음</label></td>
+				</tr>
+				<tr>
+				<th>입장료</th>
+				<td><input type="text" name="fee"></td>				
+				</tr>
+				<tr>
+				<th>이용시간</th>
+				<td><input type="text" name="use_time"></td>
+				</tr>
+				<tr>
+				<th>휴무일</th>
+				<td><input type="text" name="closed_day"></td>
+				</tr>	
+				</table>					
+			</div>
+			<div id="tab-2" class="tab-content" disabled="disabled">
+				<h1>음식점</h1>
+			</div>	
+			<div id="tab-3" class="tab-content" disabled="disabled">
+				<h1>숙박</h1>
+			</div>	
+		<div id="map" style="width:500px;height:300px;ma	rgin-top:10px;display:none"></div>
 		<div id="fileDiv">
 			<p>
 				<input type="file" id="file" name="file_0"> 
@@ -53,6 +95,38 @@
 		function onclick_addr() {
 			alert("주소 검색 기능을 사용해 주세요!");
 		}
+		
+		var category_val = "";
+		var category_type = "";
+		$(function() {
+			$("#category").change(function() {
+				category_val = this.value;
+				if(category_val == "") {
+					$('.tab-content').removeClass('current');					
+					$("#tab-0").addClass('current');
+					$(".tab-content").attr("disabled", true);
+					$("#tab-0").removeAttr("disabled");
+				} else if(category_val == "관광지") {
+					$('.tab-content').removeClass('current');					
+					$("#tab-1").addClass('current');
+					$(".tab-content").attr("disabled", true);
+					$("#tab-1").removeAttr("disabled");
+					category_type = 'tour';
+				} else if(category_val == "음식점") {
+					$('.tab-content').removeClass('current');					
+					$("#tab-2").addClass('current');
+					$(".tab-content").attr("disabled", true);
+					$("#tab-2").removeAttr("disabled");
+					category_type = 'food';
+				} else if(category_val == "숙박") {
+					$('.tab-content').removeClass('current');					
+					$("#tab-3").addClass('current');
+					$(".tab-content").attr("disabled", true);
+					$("#tab-3").removeAttr("disabled");
+					category_type = 'adj'
+				}
+			});	
+		});
 	
 		var gfv_count = 1;
 		$(document).ready(function() {
@@ -101,9 +175,31 @@
 				alert("주소를 입력해주세요!");
 				return;
 			}
-			var comSubmit = new ComSubmit("frm");
-			comSubmit.setUrl("<c:url value='/sample/insertBoard.do' />");
-			comSubmit.submit();
+			
+	        var form = $('#frm')[0];
+	 
+	        // Create an FormData object 
+	        var data = new FormData(form);
+			  $.ajax({
+		            type : 'post',
+		            enctype: 'multipart/form-data',
+		            url : 'insertBoard' + category_type + '.do',
+		            data : data,		            
+		            contentType : false,
+		            processData : false,		             
+		            success: function(data) {
+			            if (data) {
+							alert('글 작성에 성공하셨습니다.');
+							location = 'openBoardList.do';
+			            } else {
+			                alert('글 작성에 실패했습니다.');
+			            }
+			        },
+			        error: function(req, text) {
+			            alert(text + ": " + req.status);
+			        }
+		        });
+
 		}
 
 		function fn_addFile() {

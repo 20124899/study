@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import first.common.util.FileUtils;
 import first.sample.dao.SampleDAO;
@@ -34,12 +35,29 @@ public class SampleServiceImpl implements SampleService {
 			sampleDAO.insertFile(list.get(i));
 		}
 	}
+	
+	@Override
+	public void insertBoardTour(Map<String, Object> map) throws Exception {
+		sampleDAO.insertBoardTour(map);
+	}
 
 	@Override
 	public Map<String, Object> selectBoardDetail(Map<String, Object> map) throws Exception {
 		sampleDAO.updateHitCnt(map);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		Map<String, Object> tempMap = sampleDAO.selectBoardDetail(map);
+		resultMap.put("map", tempMap);
+		List<Map<String, Object>> list = sampleDAO.selectFileList(map);
+		resultMap.put("list", list);
+		return resultMap;
+	}
+	
+
+	@Override
+	public Map<String, Object> selectBoardDetailTour(Map<String, Object> map) throws Exception {
+		sampleDAO.updateHitCnt(map);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> tempMap = sampleDAO.selectBoardDetailTour(map);
 		resultMap.put("map", tempMap);
 		List<Map<String, Object>> list = sampleDAO.selectFileList(map);
 		resultMap.put("list", list);
@@ -70,5 +88,10 @@ public class SampleServiceImpl implements SampleService {
 	@Override
 	public Map<String, Object> selectBoardList2(Map<String, Object> map) throws Exception {
 	    return sampleDAO.selectBoardList2(map);
+	}
+
+	@Override
+	public void updateBoardTour(Map<String, Object> map) throws Exception {
+		 sampleDAO.updateBoardTour(map);
 	}
 }

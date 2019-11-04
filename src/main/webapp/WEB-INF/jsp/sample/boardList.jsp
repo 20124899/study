@@ -41,6 +41,14 @@ ul.tabs li.current {
 </style>
 </head>
 <body>
+
+    <div class="display">
+    	<span class="icon"><img id="we_img" src="/travel/img/icon/icon_weather_02.jpg" alt="날씨 아이콘"></span>    
+        <div class='we_img'></div>
+    <div id="display"></div> <br />
+        <div class="weather"></div>
+    </div>
+    
 	<ul class="tabs">
 		<li id="zero" class="tab-link  <c:if test="${category eq 'tab-0' }"> current</c:if>" data-tab="tab-0">전체</li>
 		<li id="one" class="tab-link <c:if test="${category eq 'tab-1' }"> current</c:if>"" data-tab="tab-1">관광지</li>
@@ -70,14 +78,14 @@ ul.tabs li.current {
 					<th>작성시간</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="list_body">
 				<c:choose>
 					<c:when test="${fn:length(list)>0}">
 						<c:forEach items="${list }" var="con">
 							<tr>
 								<td>${con.IDX }</td>
-								<td><input type="hidden" id="IDX" value="${con.IDX }"><a
-									href="#this" name="TITLE">${con.TITLE }</a></td>
+								<td id="data-category" data-category="${con.category}"><input type="hidden" id="IDX" value="${con.IDX }">
+								<a href="#this" name="TITLE">${con.TITLE }</a></td>
 								<td>${con.HIT_CNT }</td>
 								<td>${con.CREA_ID }</td>
 								<td>${con.CREA_DTM }</td>
@@ -116,15 +124,15 @@ ul.tabs li.current {
 					<th>작성시간</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="list_body">
 				<c:choose>
 					<c:when test="${fn:length(list)>0}">
 						<c:forEach items="${list }" var="con">
 							<c:if test="${con.category eq '관광지'}">
 								<tr>
 									<td>${con.IDX }</td>
-									<td><input type="hidden" id="IDX" value="${con.IDX }"><a
-										href="#this" name="TITLE">${con.TITLE }</a></td>
+									<td id="data-category" data-category="${con.category}"><input type="hidden" id="IDX" value="${con.IDX }">
+									<a href="#this" name="TITLE">${con.TITLE }</a></td>
 									<td>${con.HIT_CNT }</td>
 									<td>${con.CREA_ID }</td>
 									<td>${con.CREA_DTM }</td>
@@ -165,15 +173,15 @@ ul.tabs li.current {
 					<th>작성시간</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="list_body">
 				<c:choose>
 					<c:when test="${fn:length(list)>0}">
 						<c:forEach items="${list }" var="con">
 							<c:if test="${con.category eq '음식점'}">
 								<tr>
 									<td>${con.IDX }</td>
-									<td><input type="hidden" id="IDX" value="${con.IDX }"><a
-										href="#this" name="TITLE">${con.TITLE }</a></td>
+									<td id="data-category" data-category="${con.category}"><input type="hidden" id="IDX" value="${con.IDX }">
+									<a href="#this" name="TITLE">${con.TITLE }</a></td>
 									<td>${con.HIT_CNT }</td>
 									<td>${con.CREA_ID }</td>
 									<td>${con.CREA_DTM }</td>
@@ -215,15 +223,15 @@ ul.tabs li.current {
 					<th>작성시간</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="list_body">
 				<c:choose>
 					<c:when test="${fn:length(list)>0}">
 						<c:forEach items="${list }" var="con">
 							<c:if test="${con.category eq '숙박'}">
 								<tr>
 									<td>${con.IDX }</td>
-									<td><input type="hidden" id="IDX" value="${con.IDX }"><a
-										href="#this" name="TITLE">${con.TITLE }</a></td>
+									<td id="data-category" data-category="${con.category}"><input type="hidden" id="IDX" value="${con.IDX }">
+									<a href="#this" name="TITLE">${con.TITLE }</a></td>
 									<td>${con.HIT_CNT }</td>
 									<td>${con.CREA_ID }</td>
 									<td>${con.CREA_DTM }</td>
@@ -278,17 +286,53 @@ ul.tabs li.current {
 				e.preventDefault();
 				fn_openBoardDetail($(this));
 			})
-		})
-
+				      				
+			var apiURI = "";
+			apiURI += "https://api.openweathermap.org/data/2.5/weather?lat=35.7316575&lon=126.733423&appid=e5799cbefe2fe84bbfe2c2936d4816f4";
+			$.ajax({
+			    url: apiURI,
+			    dataType: "json",
+			    type: "GET",
+			    async: "false",
+			    success: function(resp) {
+			        var html = ""
+			        html += "<div class='ingtemp'>" + parseInt(resp.main.temp - 273.15) + "˚</div>";
+			        html += "</div>";
+			        
+			        if ((resp.weather[0].main).toString() == "Rain" || (resp.weather[0].main).toString() == "Drizzle" || (resp.weather[0].main).toString() == "Thunderstorm") {
+			        	$("#we_img").attr("src", "WEB-INF/include/ing_rain.png");
+                    } else if ((resp.weather[0].main).toString() == "Snow") {
+			        	$("#we_img").attr("src", "WEB-INF/include/ing_show.png");
+                    } else if ((resp.weather[0].main).toString() == "Clear") {
+			        	$("#we_img").attr("src", "WEB-INF/include/ing_sun.png");
+                    } else if ((resp.weather[0].main).toString() == "Clouds") {
+			        	$("#we_img").attr("src", "WEB-INF/include/ing_cloud.png");
+                    } else {
+			        	$("#we_img").attr("src", "WEB-INF/include/ing_mist.png");
+                    }
+			        $("#display").append(html);
+			    } // success                    
+			}); //ajax            			       
+		}); // document.ready
+		
 		function fn_openBoardWrite() {
 			var comSubmit = new ComSubmit();
 			comSubmit.setUrl("<c:url value='/sample/openBoardWrite.do'/>");
 			comSubmit.submit();
 		}
 		function fn_openBoardDetail(val) {
-			var comSubmit = new ComSubmit();
-			comSubmit.addParam("IDX", val.parent().find("#IDX").val());
-			comSubmit.setUrl("<c:url value='/sample/openBoardDetail.do'/>");
+			var comSubmit = new ComSubmit();				
+			var cate = val.parent().data('category'); // 클릭한 글의 카테고리를 검색해서
+			
+ 			comSubmit.addParam("IDX", val.parent().find("#IDX").val()); // 선택한 글의 IDX 값을 보내서 submit
+			
+			if(cate == "관광지") { // 카테고리가 관광지면
+				comSubmit.setUrl("<c:url value='/sample/openBoardDetailtour.do'/>"); // openBoardDetailtour 호출
+			} else if(cate == "음식점") { // 음식점이면
+				comSubmit.setUrl("<c:url value='/sample/openBoardDetail.do'/>");				
+			} else if(cate == "숙박") { // 숙박이면
+				comSubmit.setUrl("<c:url value='/sample/openBoardDetail.do'/>");									
+			}
 			comSubmit.submit();
 		}
 		function fn_search(pageNo) {

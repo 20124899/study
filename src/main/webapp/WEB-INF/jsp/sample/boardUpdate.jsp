@@ -4,6 +4,16 @@
 <html lang="ko">
 <head>
 <%@ include file="/WEB-INF/include/include-header.jspf"%>
+<style type="text/css">
+.tab-content {
+	display: none;
+	padding: 15px;
+}
+
+.tab-content.current {
+	display: inherit;
+}
+</style>
 </head>
 <body>
 	<form id="frm" name="frm" enctype="multipart/form-data">
@@ -70,6 +80,38 @@
 			<input type="hidden" id="lat" name="lat" value="${map.lat}">
 			<input type="hidden" id="lon" name="lon" value="${map.lon}">
 		</table>
+		<div id="tab-0" class="tab-content current"></div>
+			<div id="tab-1" class="tab-content" disabled="disabled" style="padding: 0px;">
+			<table class="board_view">
+				<colgroup>
+					<col width="16.4%">
+					<col width="*" />
+				</colgroup>
+					<tr>
+					<th>주차장</th>
+					<td><label><input type="radio" name="parking" value="있음">있음</label>
+						<label><input type="radio" name="parking" value="없음">없음</label></td>
+					</tr>
+					<tr>
+					<th>입장료</th>
+					<td><input type="text" name="fee" value="${tour.fee}"></td>				
+					</tr>
+					<tr>
+					<th>이용시간</th>
+					<td><input type="text" name="use_time" value="${tour.use_time}"></td>
+					</tr>
+					<tr>
+					<th>휴무일</th>
+					<td><input type="text" name="closed_day" value="${tour.closed_day}"></td>
+					</tr>	
+				</table>					
+			</div>
+			<div id="tab-2" class="tab-content" disabled="disabled">
+				<h1>음식점</h1>
+			</div>	
+			<div id="tab-3" class="tab-content" disabled="disabled">
+				<h1>숙박</h1>
+			</div>	
 		<div id="map" style="width:500px;height:300px;margin-top:10px;"></div>
 	</form>
 	<a href="#this" class="btn" id="addFile">파일 추가</a>
@@ -80,6 +122,40 @@
 	<%@ include file="/WEB-INF/include/include-body.jspf"%>
 
 	<script type="text/javascript">
+	
+	var category_val = "";
+	var category_type = "";
+	$(function() {		
+		$("#category").change(function() {
+			category_val = this.value;
+			if(category_val == "") {
+				$('.tab-content').removeClass('current');					
+				$("#tab-0").addClass('current');
+				$(".tab-content").attr("disabled", true);
+				$("#tab-0").removeAttr("disabled");
+			} else if(category_val == "관광지") {
+				$('.tab-content').removeClass('current');					
+				$("#tab-1").addClass('current');
+				$(".tab-content").attr("disabled", true);
+				$("#tab-1").removeAttr("disabled");
+				category_type = 'tour';
+			} else if(category_val == "음식점") {
+				$('.tab-content').removeClass('current');					
+				$("#tab-2").addClass('current');
+				$(".tab-content").attr("disabled", true);
+				$("#tab-2").removeAttr("disabled");
+				category_type = 'food';
+			} else if(category_val == "숙박") {
+				$('.tab-content').removeClass('current');					
+				$("#tab-3").addClass('current');
+				$(".tab-content").attr("disabled", true);
+				$("#tab-3").removeAttr("disabled");
+				category_type = 'adj'
+			}
+		});	
+		
+	});
+	
 		function onclick_addr() {
 			alert("주소 검색 기능을 사용해 주세요!");
 		}				
@@ -91,9 +167,49 @@
 			// 수정시 카테고리 자동 매칭
 			  $('#category option').each(function(){
 				    if($(this).val() == "${map.category}"){
-				      $(this).attr("selected","selected"); 
+				      $(this).attr("selected","selected");
+				      var category_val = $(this).val();
+				      
+				      if(category_val == "") {
+							$('.tab-content').removeClass('current');					
+							$("#tab-0").addClass('current');
+							$(".tab-content").attr("disabled", true);
+							$("#tab-0").removeAttr("disabled");
+						} else if(category_val == "관광지") {
+							$('.tab-content').removeClass('current');					
+							$("#tab-1").addClass('current');
+							$(".tab-content").attr("disabled", true);
+							$("#tab-1").removeAttr("disabled");
+							category_type = 'tour';
+						} else if(category_val == "음식점") {
+							$('.tab-content').removeClass('current');					
+							$("#tab-2").addClass('current');
+							$(".tab-content").attr("disabled", true);
+							$("#tab-2").removeAttr("disabled");
+							category_type = 'food';
+						} else if(category_val == "숙박") {
+							$('.tab-content').removeClass('current');					
+							$("#tab-3").addClass('current');
+							$(".tab-content").attr("disabled", true);
+							$("#tab-3").removeAttr("disabled");
+							category_type = 'adj'
+						}
 				    }
 				  });
+			
+			$('input[name="parking"]').each(function() {
+				$(this).prop('checked', false);
+				 
+				var myValue = "${tour.parking}";
+				
+				if(myValue == "있음") {
+					$('input[value="있음"]').prop("checked", true);
+				} else if(myValue =="없음"){
+					$('input[value="없음"]').prop("checked", true);
+				}		
+			});
+				
+		
 			  
 			$("#list").on("click", function(e) { //목록으로 버튼 
 				e.preventDefault();
@@ -124,9 +240,49 @@
 		}
 
 		function fn_updateBoard() {
-			var comSubmit = new ComSubmit("frm");
-			comSubmit.setUrl("<c:url value='/sample/updateBoard.do' />");
-			comSubmit.submit();
+			if($("#TITLE").val() == "") {
+				alert("제목을 입력해주세요!");
+				return;
+			}
+			
+			if($("#CONTENTS").val() == "") {
+				alert("내용을 입력해주세요!");
+				return;
+			}
+			
+			if($("#category").val() == "") {
+				alert("카테고리를 입력해주세요!");
+				return;
+			}
+			
+			if($("#sample5_address").val() == "") {
+				alert("주소를 입력해주세요!");
+				return;
+			}
+			
+	        var form = $('#frm')[0];
+	 
+	        // Create an FormData object 
+	        var data = new FormData(form);
+			  $.ajax({
+		            type : 'post',
+		            enctype: 'multipart/form-data',
+		            url : 'updateBoard' + category_type + '.do',
+		            data : data,		            
+		            contentType : false,
+		            processData : false,		             
+		            success: function(data) {
+			            if (data) {
+			            	location = 'openBoardDetail'+ category_type +'.do?IDX=${map.IDX}';
+					        alert('글 수정에 성공했습니다.'); 	
+			            } else {
+			                alert('글 수정에 실패했습니다.');
+			            }
+			        },
+			        error: function(req, text) {
+			            alert(text + ": " + req.status);
+			        }
+		        });
 		}
 
 		function fn_deleteBoard() {
